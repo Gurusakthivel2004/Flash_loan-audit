@@ -2,6 +2,7 @@
 pragma solidity 0.8.20;
 
 import {Test, console} from "forge-std/Test.sol";
+import { ThunderLoanUpgraded } from "../../src/upgradedProtocol/ThunderLoanUpgraded.sol";
 import {BaseTest, ThunderLoan} from "./BaseTest.t.sol";
 import {BuffMockPoolFactory} from "../mocks/BuffMockPoolFactory.sol";
 import {BuffMockTSwap} from "../mocks/BuffMockTSwap.sol";
@@ -220,6 +221,17 @@ contract ThunderLoanTest is BaseTest {
         vm.stopPrank();
 
         assert(tokenA.balanceOf(address(dor)) > 50e18 + fee);
+    }
+
+    function testUpgradeBreaks() public {
+        uint256 feeBeforeUpgrade = thunderLoan.getFee();
+        vm.startPrank(thunderLoan.owner());
+        ThunderLoanUpgraded upgraded = new ThunderLoanUpgraded();
+        thunderLoan.upgradeToAndCall(address(upgraded), "");
+        uint256 feeAfterUpgrade = thunderLoan.getFee();
+        vm.stopPrank();
+
+        assert(feeBeforeUpgrade != feeAfterUpgrade);
     }
 }
 

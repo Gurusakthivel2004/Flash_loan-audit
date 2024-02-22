@@ -302,10 +302,6 @@ contract BuffMockTSwap is ERC20 {
         _swapWethForPoolToken(wethSold, poolTokenAmount);
     }
 
-    /*//////////////////////////////////////////////////////////////
-                       SWAP POOL TOKENS FOR WETH
-    //////////////////////////////////////////////////////////////*/
-
     function _swapPoolTokensForWeth(uint256 poolTokenAmount, uint256 wethAmount) private {
         emit PoolTokenSwappedForWeth(msg.sender, wethAmount, poolTokenAmount);
         i_weth.safeTransfer(msg.sender, wethAmount);
